@@ -1,4 +1,5 @@
 ﻿using AM.ApplicationCore.Domain;
+using AM.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,18 @@ namespace AM.Infrastructure
             base.OnConfiguring(optionsBuilder);
         }
         //Régle de mapping Fluent API
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // modelBuilder.ApplyConfiguration(new PlaneConfiguration());
+
+            //Deuxieme méthode (sans classe config):
+            modelBuilder.Entity<Plane>().HasKey(p => p.PlaneId);
+            modelBuilder.Entity<Plane>().ToTable("MyPlanes");
+            modelBuilder.Entity<Plane>().Property(p => p.Capacity).HasColumnName("PlaneCapacity");
+
+            modelBuilder.ApplyConfiguration(new FlightConfigurations());
+            base.OnModelCreating(modelBuilder);
+        }
         //Connexion relatives à tous le monde
 
 
